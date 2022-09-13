@@ -1,19 +1,12 @@
 import React, { useContext } from "react";
 
 import CacheContext from "./CacheContext";
-import { IKeepalive } from "./KeepAlive";
 
-export const useText = (): {
-  cacheRouteList: IKeepalive[];
-  activeName: string;
-  setActiveName: any;
+export const useMultipletabsData = (): {
   dropByCacheKey: (path: string) => void;
 } => {
-  const { dropByCacheKey, cacheRouteList, activeName, setActiveName } = useContext(CacheContext);
+  const { dropByCacheKey } = useContext(CacheContext);
   return {
     dropByCacheKey,
-    cacheRouteList,
-    activeName,
-    setActiveName,
   };
 };

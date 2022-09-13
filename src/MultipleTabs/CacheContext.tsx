@@ -1,15 +1,6 @@
-import React from "react";
+import React from 'react'
+import { IContext } from './type'
 
-import { IKeepalive } from "./KeepAlive";
+const CacheContext = React.createContext({} as IContext)
 
-interface IContext {
-  dropByCacheKey: any;
-  keepElements: any;
-  keepalive: IKeepalive[];
-  cacheRouteList: IKeepalive[];
-  activeName: string;
-  setActiveName: any;
-}
-let CacheContext = React.createContext({} as IContext);
-
-export default CacheContext;
+export default CacheContext
