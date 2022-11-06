@@ -12,7 +12,6 @@ import UserAdd2 from "../components/UserAdd2";
 import UserAdd3 from "../components/UserAdd3";
 import UserAdd4 from "../components/UserAdd4";
 import UserAdd5 from "../components/UserAdd5";
-
 const LeftNav = [
   {
     name: "首页",
@@ -46,7 +45,6 @@ const LeftNav = [
     name: "添加用户4",
     link: "/add4",
   },
-
   {
     name: "添加用户5",
     link: "/add5",
@@ -55,7 +53,7 @@ const LeftNav = [
 
 const Layout = () => {
   return (
-    <KeepAlive activeName="" include={["/add2", "/add4"]}>
+    <KeepAlive>
       <TagView leftNav={LeftNav} />
       <ul>
         {LeftNav.map((item, index) => {

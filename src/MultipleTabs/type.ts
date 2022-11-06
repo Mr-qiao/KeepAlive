@@ -1,7 +1,7 @@
 import { ReactNode, RefObject } from "react";
 
 export interface IProps {
-  activeName: string;
+  className?: string;
   include?: string[];
   exclude?: string[];
   maxLen?: number;
@@ -15,9 +15,9 @@ export interface IKeepElementRef {
 export interface IContext {
   dropByCacheKey: any;
   keepElements: any;
-  activeName: string;
+  className?: string;
   include: string[];
-  exclude?: string[];
+  exclude: string[];
   maxLen?: number;
 }
 
@@ -25,6 +25,7 @@ export interface ComponentReactElement {
   children?: ReactNode | ReactNode[];
 }
 export interface IComponentProps extends ComponentReactElement {
+  className: string;
   active: boolean;
   name: string;
   renderDiv: RefObject<HTMLDivElement>;

@@ -1,3 +1,4 @@
+import { isEmpty } from "ramda";
 import { memo, useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import { createPortal } from "react-dom";
@@ -5,22 +6,41 @@ import { Outlet, useLocation, useOutlet } from "react-router-dom";
 import CacheContext from "./CacheContext";
 
 import { IComponentProps } from "./type";
-
-function isKeepPath(include: string[], path: string) {
+/**
+ * 缓存组件状态
+ * @param include 需要缓存的路由 例子：['/home', '/user/*']
+ * @param exclude  不需要缓存的路由
+ * @param path 当前路由
+ * @returns
+ */
+function isKeepPath(include: string[], exclude: string[], path: string) {
   let isKeep = false;
-  include?.some((item) => {
-    if (item.split("/*").length === 1 && item === path) {
-      isKeep = true;
-    } else if (item.split("/*").length > 1) {
-      isKeep = item.split("/*").every((m) => {
-        return path.includes(m);
-      });
-    }
-    return isKeep;
-  });
+  if (isEmpty(include) && isEmpty(exclude)) return true;
+  if (!isEmpty(include)) {
+    include?.some((item) => {
+      if (item.split("/*").length === 1 && item === path) {
+        isKeep = true;
+      } else if (item.split("/*").length > 1) {
+        isKeep = item.split("/*").every((m) => {
+          return path.includes(m);
+        });
+      }
+      return isKeep;
+    });
+  }
+  if (!isEmpty(exclude)) {
+    if (exclude.includes(path)) return false;
+  }
+  isKeep = true;
   return isKeep;
 }
-function Component({ active, children, name, renderDiv, handleScroll, scrolls }: IComponentProps) {
+
+/**
+ *
+ * @param
+ * @returns
+ */
+function Component({ className, active, children, name, renderDiv, handleScroll, scrolls }: IComponentProps) {
   const [targetElement] = useState(() => document.createElement("div"));
   const activatedRef = useRef(false);
   activatedRef.current = activatedRef.current || active;
@@ -42,16 +62,18 @@ function Component({ active, children, name, renderDiv, handleScroll, scrolls }:
   }, [active, name, renderDiv, targetElement, handleScroll]);
   useEffect(() => {
     targetElement.setAttribute("id", name);
+    targetElement.setAttribute("class", className);
   }, [name, targetElement]);
   return <>{activatedRef.current && createPortal(children, targetElement)}</>;
 }
 
 export const KeepOutlets = memo(function KeepOutlets() {
-  const { activeName, include, keepElements } = useContext(CacheContext);
+  const { className, include, exclude, keepElements } = useContext(CacheContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   // 是否需要缓存
-  const isKeep = isKeepPath(include, location.pathname);
+  const isKeep = isKeepPath(include, exclude, location.pathname);
+  console.log("isKeep", isKeep);
   const element = useOutlet();
   const obj = {
     element,
@@ -72,10 +94,11 @@ export const KeepOutlets = memo(function KeepOutlets() {
   );
   return (
     <>
-      <div ref={containerRef} className="keep-alive" />
+      <div ref={containerRef} className={`"keep-alive",${className}`} />
       {Object.entries(keepElements?.current)?.map(([pathname, ele]: any) => {
         return (
           <Component
+            className={className || ""}
             scrolls={isKeep ? ele.scrolls : {}}
             renderDiv={containerRef}
             name={pathname}
