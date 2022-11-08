@@ -21,6 +21,11 @@ const LeftNav = [
     name: "用户列表",
     link: "/list",
   },
+
+  {
+    name: "用户列表1",
+    link: "/list1",
+  },
   {
     name: "添加用户",
     link: "/add",
@@ -74,6 +79,7 @@ function KeepView() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="list" element={<UserList />} />
+          <Route path="list1" element={<UserList />} />
           <Route path="add" element={<UserAdd />} />
           <Route path="add1" element={<UserAdd1 />} />
           <Route path="add2" element={<UserAdd2 />} />
